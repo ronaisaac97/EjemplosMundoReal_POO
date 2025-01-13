@@ -1,0 +1,93 @@
+# Clase que representa una habitación del hotel
+#Sistema de Reservas de Hotel usando POO
+# El presenta un ejemplo de un sistema de reservas de hotel utilizando Programación Orientada a Objetos (POO). El programa incluye clases con atributos y métodos claramente definidos, además de comentarios para explicar su funcionamiento.
+class Habitacion:
+    def __init__(self, numero, tipo, precio):
+        """
+        Constructor de la clase Habitacion.
+        :param numero: Número de la habitación.
+        :param tipo: Tipo de habitación (simple, doble, suite).
+        :param precio: Precio por noche.
+        """
+        self.numero = numero
+        self.tipo = tipo
+        self.precio = precio
+        self.disponible = True  # La habitación está disponible por defecto
+
+    def __str__(self):
+        """
+        Representación en forma de cadena de la habitación.
+        """
+        estado = "Disponible" if self.disponible else "Ocupada"
+        return f"Habitación {self.numero} - {self.tipo} - ${self.precio} - {estado}"
+
+
+# Clase que representa una reserva
+class Reserva:
+    def __init__(self, cliente, habitacion, noches):
+        """
+        Constructor de la clase Reserva.
+        :param cliente: Nombre del cliente.
+        :param habitacion: Objeto Habitacion reservado.
+        :param noches: Número de noches de la reserva.
+        """
+        self.cliente = cliente
+        self.habitacion = habitacion
+        self.noches = noches
+
+    def calcular_costo(self):
+        """
+        Calcula el costo total de la reserva.
+        :return: Costo total (precio por noche * noches).
+        """
+        return self.habitacion.precio * self.noches
+
+    def __str__(self):
+        """
+        Representación en forma de cadena de la reserva.
+        """
+        return f"Reserva para {self.cliente} - {self.habitacion} - Noches: {self.noches} - Total: ${self.calcular_costo()}"
+
+
+# Clase que administra el sistema de reservas
+class Hotel:
+    def __init__(self, nombre):
+        """
+        Constructor de la clase Hotel.
+        :param nombre: Nombre del hotel.
+        """
+        self.nombre = nombre
+        self.habitaciones = []
+        self.reservas = []
+
+    def agregar_habitacion(self, habitacion):
+        """
+        Agrega una habitación al hotel.
+        :param habitacion: Objeto Habitacion.
+        """
+        self.habitaciones.append(habitacion)
+
+    def mostrar_habitaciones_disponibles(self):
+        """
+        Muestra todas las habitaciones disponibles.
+        """
+        print("\nHabitaciones disponibles:")
+        disponibles = [habitacion for habitacion in self.habitaciones if habitacion.disponible]
+        if disponibles:
+            for habitacion in disponibles:
+                print(habitacion)
+        else:
+            print("No hay habitaciones disponibles.")
+
+    def reservar_habitacion(self, cliente, numero_habitacion, noches):
+        """
+        Realiza una reserva de una habitación.
+        :param cliente: Nombre del cliente.
+        :param numero_habitacion: Número de la habitación a reservar.
+        :param noches: Número de noches de la reserva.
+        """
+        for habitacion in self.habitaciones:
+            if habitacion.numero == numero_habitacion and habitacion.disponible:
+                habitacion.disponible = False
+                reserva = Reserva(cliente, habitacion, noches)
+                self.reservas.append(reserva)
