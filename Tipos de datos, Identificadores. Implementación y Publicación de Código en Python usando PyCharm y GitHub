@@ -1,0 +1,61 @@
+"""
+Calculadora de Área y Perímetro de un Rectángulo
+ Este programa solicita al usuario ingresar la base y la altura de un rectángulo.
+Calcula y muestra el área y el perímetro del rectángulo, validando que las dimensiones sean positivas.
+"""
+
+# Función para calcular el área del rectángulo
+def calcular_area(base: float, altura: float) -> float:
+    """
+    Calcula el área de un rectángulo.
+    :param base: Base del rectángulo (float).
+    :param altura: Altura del rectángulo (float).
+    :return: Área del rectángulo (float).
+    """
+    return base * altura
+
+# Función para calcular el perímetro del rectángulo
+def calcular_perimetro(base: float, altura: float) -> float:
+    """
+    Calcula el perímetro de un rectángulo.
+    :param base: Base del rectángulo (float).
+    :param altura: Altura del rectángulo (float).
+    :return: Perímetro del rectángulo (float).
+    """
+    return 2 * (base + altura)
+
+# Función principal del programa
+def main():
+    """
+    Función principal que solicita las dimensiones del rectángulo al usuario,
+    valida los datos ingresados y muestra el área y el perímetro calculados.
+    """
+    print("=== Calculadora de Área y Perímetro de un Rectángulo ===")
+
+    # Solicitar las dimensiones del rectángulo al usuario
+    try:
+        base = float(input("Ingrese la base del rectángulo (en unidades): "))
+        altura = float(input("Ingrese la altura del rectángulo (en unidades): "))
+
+        # Validar que las dimensiones sean positivas
+        if base <= 0 or altura <= 0:
+            print("Error: Las dimensiones deben ser números positivos.")
+            return
+
+        # Calcular el área y el perímetro
+        area = calcular_area(base, altura)
+        perimetro = calcular_perimetro(base, altura)
+
+        # Mostrar los resultados
+        print(f"\nResultados:")
+        print(f"Base: {base} unidades")
+        print(f"Altura: {altura} unidades")
+        print(f"Área: {area} unidades cuadradas")
+        print(f"Perímetro: {perimetro} unidades")
+
+    except ValueError:
+        print("Error: Por favor, ingrese valores numéricos válidos.")
+
+# Ejecutar el programa principal
+if __name__ == "__main__":
+    main()
