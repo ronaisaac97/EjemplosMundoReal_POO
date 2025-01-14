@@ -1,0 +1,70 @@
+"""
+ Sistema de Gestión de Empleados
+ Este programa implementa un sistema básico para gestionar empleados,
+ los conceptos de herencia, encapsulación y polimorfismo en POO.
+"""
+
+# Clase base: Persona
+class Persona:
+    def __init__(self, nombre, edad):
+        self.__nombre = nombre  # Atributo encapsulado
+        self.__edad = edad      # Atributo encapsulado
+
+    # Getters y setters para encapsulación
+    def get_nombre(self):
+        return self.__nombre
+
+    def set_nombre(self, nombre):
+        self.__nombre = nombre
+
+    def get_edad(self):
+        return self.__edad
+
+    def set_edad(self, edad):
+        if edad > 0:
+            self.__edad = edad
+        else:
+            print("La edad debe ser un número positivo.")
+
+    # Método genérico
+    def descripcion(self):
+        return f"{self.__nombre}, {self.__edad} años."
+
+# Clase derivada: Empleado
+class Empleado(Persona):
+    def __init__(self, nombre, edad, puesto, salario):
+        super().__init__(nombre, edad)  # Hereda atributos de la clase base
+        self.puesto = puesto
+        self.salario = salario
+
+    # Sobrescritura de método (polimorfismo)
+    def descripcion(self):
+        return f"Empleado: {self.get_nombre()}, {self.get_edad()} años, Puesto: {self.puesto}, Salario: ${self.salario}."
+
+# Clase derivada: Gerente
+class Gerente(Empleado):
+    def __init__(self, nombre, edad, puesto, salario, departamento):
+        super().__init__(nombre, edad, puesto, salario)
+        self.departamento = departamento
+
+    # Sobrescritura de método (polimorfismo)
+    def descripcion(self):
+        return f"Gerente: {self.get_nombre()}, {self.get_edad()} años, Departamento: {self.departamento}, Salario: ${self.salario}."
+
+# Función principal
+def main():
+    # Crear objetos de las clases
+    empleado1 = Empleado("Juan Pérez", 28, "Analista", 3000)
+    gerente1 = Gerente("Ana García", 35, "Gerente de Ventas", 7000, "Ventas")
+
+    # Mostrar descripciones utilizando polimorfismo
+    print(empleado1.descripcion())
+    print(gerente1.descripcion())
+
+    # Demostración de encapsulación
+    print(f"Nombre actual del empleado: {empleado1.get_nombre()}")
+    empleado1.set_nombre("Carlos Ramírez")
+    print(f"Nombre actualizado del empleado: {empleado1.get_nombre()}")
+
+if __name__ == "__main__":
+    main()
