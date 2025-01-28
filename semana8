@@ -1,0 +1,130 @@
+import os
+import subprocess
+
+def mostrar_codigo(ruta_script):
+    """Muestra el contenido de un script."""
+    ruta_script_absoluta = os.path.abspath(ruta_script)
+    try:
+        with open(ruta_script_absoluta, 'r') as archivo:
+            codigo = archivo.read()
+            print(f"\n--- Código de {ruta_script} ---\n")
+            print(codigo)
+            return codigo
+    except FileNotFoundError:
+        print("Error: El archivo no se encontró.")
+        return None
+    except Exception as e:
+        print(f"Error al leer el archivo: {e}")
+        return None
+
+def ejecutar_codigo(ruta_script):
+    """Ejecuta un script en una nueva terminal."""
+    try:
+        if os.name == 'nt':  # Windows
+            subprocess.Popen(['cmd', '/k', 'python', ruta_script])
+        else:  # Unix-based systems
+            subprocess.Popen(['x-terminal-emulator', '-e', f'python3 {ruta_script}'])
+    except Exception as e:
+        print(f"Error al ejecutar el script: {e}")
+
+def obtener_entrada_usuario(mensaje):
+    """Obtiene la entrada del usuario o devuelve un valor predeterminado en entornos no interactivos."""
+    try:
+        return input(mensaje)
+    except (EOFError, OSError):
+        print("Entrada no disponible en este entorno. Usando valor predeterminado.")
+        return '0'
+
+def mostrar_menu():
+    """Muestra el menú principal del programa."""
+    ruta_base = os.getcwd()
+
+    unidades = {
+        '1': 'Unidad 1',
+        '2': 'Unidad 2'
+    }
+
+    while True:
+        print("\n=== Menú Principal ===")
+        for key, nombre in unidades.items():
+            print(f"{key} - {nombre}")
+        print("0 - Salir")
+
+        eleccion_unidad = obtener_entrada_usuario("Elige una unidad o '0' para salir: ")
+        if eleccion_unidad == '0':
+            print("Saliendo del programa.")
+            break
+        elif eleccion_unidad in unidades:
+            mostrar_sub_menu(os.path.join(ruta_base, unidades[eleccion_unidad]))
+        else:
+            print("Opción no válida. Intenta nuevamente.")
+
+def mostrar_sub_menu(ruta_unidad):
+    """Muestra un submenú con las subcarpetas disponibles."""
+    try:
+        sub_carpetas = sorted([f.name for f in os.scandir(ruta_unidad) if f.is_dir()])
+    except FileNotFoundError:
+        print("Error: La unidad seleccionada no tiene contenido.")
+        return
+
+    while True:
+        print("\n=== Submenú ===")
+        for i, carpeta in enumerate(sub_carpetas, start=1):
+            print(f"{i} - {carpeta}")
+        print("0 - Regresar al menú principal")
+
+        eleccion_carpeta = obtener_entrada_usuario("Elige una subcarpeta o '0' para regresar: ")
+        if eleccion_carpeta == '0':
+            break
+        else:
+            try:
+                eleccion_carpeta = int(eleccion_carpeta) - 1
+                if 0 <= eleccion_carpeta < len(sub_carpetas):
+                    mostrar_scripts(os.path.join(ruta_unidad, sub_carpetas[eleccion_carpeta]))
+                else:
+                    print("Opción no válida. Intenta nuevamente.")
+            except ValueError:
+                print("Opción no válida. Intenta nuevamente.")
+
+def mostrar_scripts(ruta_sub_carpeta):
+    """Muestra los scripts disponibles en una subcarpeta."""
+    try:
+        scripts = sorted([f.name for f in os.scandir(ruta_sub_carpeta) if f.is_file() and f.name.endswith('.py')])
+    except FileNotFoundError:
+        print("Error: No se encontraron scripts en esta subcarpeta.")
+        return
+
+    while True:
+        print("\n=== Scripts ===")
+        for i, script in enumerate(scripts, start=1):
+            print(f"{i} - {script}")
+        print("0 - Regresar al submenú")
+        print("9 - Regresar al menú principal")
+
+        eleccion_script = obtener_entrada_usuario("Elige un script, '0' para regresar o '9' para ir al menú principal: ")
+        if eleccion_script == '0':
+            break
+        elif eleccion_script == '9':
+            return
+        else:
+            try:
+                eleccion_script = int(eleccion_script) - 1
+                if 0 <= eleccion_script < len(scripts):
+                    ruta_script = os.path.join(ruta_sub_carpeta, scripts[eleccion_script])
+                    codigo = mostrar_codigo(ruta_script)
+                    if codigo:
+                        ejecutar = obtener_entrada_usuario("¿Deseas ejecutar el script? (1: Sí, 0: No): ")
+                        if ejecutar == '1':
+                            ejecutar_codigo(ruta_script)
+                        elif ejecutar == '0':
+                            print("No se ejecutó el script.")
+                        else:
+                            print("Opción no válida.")
+                        obtener_entrada_usuario("Presiona Enter para volver al menú de scripts.")
+                else:
+                    print("Opción no válida. Intenta nuevamente.")
+            except ValueError:
+                print("Opción no válida. Intenta nuevamente.")
+
+if __name__ == "__main__":
+    mostrar_menu()
