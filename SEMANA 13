@@ -1,0 +1,49 @@
+import tkinter as tk
+from tkinter import messagebox
+
+def agregar_elemento():
+    texto = entrada.get()
+    if texto.strip():
+        lista.insert(tk.END, texto)
+        entrada.delete(0, tk.END)
+    else:
+        messagebox.showwarning("Campo vacío", "Por favor ingrese un dato válido")
+
+def limpiar_elementos():
+    lista.delete(0, tk.END)
+    entrada.delete(0, tk.END)
+
+# Crear ventana principal
+ventana = tk.Tk()
+ventana.title("Aplicación Básica de Datos")
+ventana.geometry("400x300")
+
+# Frame principal para organización
+frame_principal = tk.Frame(ventana, padx=10, pady=10)
+frame_principal.pack(expand=True, fill=tk.BOTH)
+
+# Etiqueta de instrucción
+tk.Label(frame_principal, text="Ingrese su dato:").pack(anchor=tk.W)
+
+# Campo de entrada
+entrada = tk.Entry(frame_principal, width=40)
+entrada.pack(pady=5)
+
+# Frame para botones
+frame_botones = tk.Frame(frame_principal)
+frame_botones.pack(pady=5)
+
+# Botón Agregar
+btn_agregar = tk.Button(frame_botones, text="Agregar", command=agregar_elemento)
+btn_agregar.pack(side=tk.LEFT, padx=5)
+
+# Botón Limpiar
+btn_limpiar = tk.Button(frame_botones, text="Limpiar", command=limpiar_elementos)
+btn_limpiar.pack(side=tk.LEFT, padx=5)
+
+# Lista para mostrar datos
+lista = tk.Listbox(frame_principal, width=45, height=10)
+lista.pack(pady=5)
+
+# Ejecutar el bucle principal
+ventana.mainloop()
